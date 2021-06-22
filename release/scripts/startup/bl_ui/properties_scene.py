@@ -365,11 +365,13 @@ class SCENE_PT_rigid_body_world(SceneButtonsPanel, Panel):
             col = split.column()
             col.prop(rbw, "time_scale", text="Speed")
             col.prop(rbw, "use_split_impulse")
-
+            col.prop(rbw, "erp", text="ERP")
+            col.prop(rbw, "cfm", text="CFM")
             col = split.column()
             col.prop(rbw, "steps_per_second", text="Steps Per Second")
             col.prop(rbw, "solver_iterations", text="Solver Iterations")
-
+            
+            col.prop(rbw, "lsr", text="LSR")
 
 class SCENE_PT_rigid_body_world_Periodic_Boundary(SceneButtonsPanel, Panel):
     bl_label = "Rigid Body World Periodic Boundary"

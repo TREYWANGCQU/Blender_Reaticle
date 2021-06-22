@@ -224,6 +224,15 @@ void RB_dworld_set_solver_iterations(rbDynamicsWorld *world, int num_solver_iter
 	
 	info.m_numIterations = num_solver_iterations;
 }
+void RB_dworld_set_solver_parameters(rbDynamicsWorld *world, float erp, float cfm, float  lsr)
+{
+	btContactSolverInfo& info = world->dynamicsWorld->getSolverInfo();
+
+	info.m_erp = erp;
+	info.m_globalCfm = cfm;
+	info.m_leastSquaresResidualThreshold = lsr;
+}
+
 
 /* Split Impulse */
 void RB_dworld_set_split_impulse(rbDynamicsWorld *world, int split_impulse)

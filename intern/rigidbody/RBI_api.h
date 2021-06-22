@@ -96,6 +96,8 @@ void RB_world_set_periodic_boundary(rbDynamicsWorld *world, const float  mi_peri
 
 /* Constraint Solver */
 void RB_dworld_set_solver_iterations(rbDynamicsWorld *world, int num_solver_iterations);
+void RB_dworld_set_solver_parameters(rbDynamicsWorld *world, float erp, float cfm, float lsr);
+
 /* Split Impulse */
 void RB_dworld_set_split_impulse(rbDynamicsWorld *world, int split_impulse);
 

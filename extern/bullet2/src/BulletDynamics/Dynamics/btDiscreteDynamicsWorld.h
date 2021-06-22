@@ -54,6 +54,7 @@ protected:
 	btVector3	m_mx_periodic;
 	bool		m_is_periodic[3];
 
+
 	//for variable timesteps
 	btScalar	m_localTime;
 	btScalar	m_fixedTimeStep;

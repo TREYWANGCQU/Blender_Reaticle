@@ -813,7 +813,7 @@ static void rna_def_rigidbody_world(BlenderRNA *brna)
 	/* timestep */
 	prop = RNA_def_property(srna, "steps_per_second", PROP_INT, PROP_NONE);
 	RNA_def_property_int_sdna(prop, NULL, "steps_per_second");
-	RNA_def_property_range(prop, 1, SHRT_MAX);
+	RNA_def_property_range(prop, 1, INT_MAX);
 	RNA_def_property_ui_range(prop, 1, 1000, 1, -1);
 	RNA_def_property_int_default(prop, 100);
 	RNA_def_property_ui_text(prop, "Steps Per Second",
@@ -824,13 +824,39 @@ static void rna_def_rigidbody_world(BlenderRNA *brna)
 	/* constraint solver iterations */
 	prop = RNA_def_property(srna, "solver_iterations", PROP_INT, PROP_NONE);
 	RNA_def_property_int_sdna(prop, NULL, "num_solver_iterations");
-	RNA_def_property_range(prop, 1, SHRT_MAX);
+	RNA_def_property_range(prop, 1, INT_MAX);
 	RNA_def_property_ui_range(prop, 1, 100, 1, -1);
 	RNA_def_property_int_default(prop, 20);
 	RNA_def_property_int_funcs(prop, NULL, "rna_RigidBodyWorld_num_solver_iterations_set", NULL);
 	RNA_def_property_ui_text(prop, "Solver Iterations",
-	                         "Number of constraint solver iterations made per simulation step (higher values are more "
+	                         "Max number of constraint solver iterations made per simulation step (higher values are more "
 	                         "accurate but slower)");
+	RNA_def_property_update(prop, NC_SCENE, "rna_RigidBodyWorld_reset");
+
+	/* parametes of solver iterations */
+	prop = RNA_def_property(srna, "erp", PROP_FLOAT, PROP_NONE);
+	RNA_def_property_float_sdna(prop, NULL, "erp");
+	RNA_def_property_ui_range(prop, 0.0f, 1.0f, 1, 3);
+	RNA_def_property_float_default(prop, 0.2f);
+	RNA_def_property_ui_text(prop, "ERP",
+		" error reduction parameter:The ERP specifies what proportion of the joint error will be fixed during the next simulation step. If ERP=0 then no correcting force is applied and the bodies will eventually drift apart as the simulation proceeds. If ERP=1 then the simulation will attempt to fix all joint error during the next time step. However, setting ERP=1 is not recommended, as the joint error will not be completely fixed due to various internal approximations. A value of ERP=0.1 to 0.8 is recommended (0.2 is the default).");
+	RNA_def_property_update(prop, NC_SCENE, "rna_RigidBodyWorld_reset");
+
+
+	prop = RNA_def_property(srna, "cfm", PROP_FLOAT, PROP_NONE);
+	RNA_def_property_float_sdna(prop, NULL, "cfm");
+	RNA_def_property_ui_range(prop, 0.0f, 1.0f, 1, 3);
+	RNA_def_property_float_default(prop, 0.0f);
+	RNA_def_property_ui_text(prop, "CFM",
+		"constraint force mixing :sing a positive value of CFM has the additional benefit of taking the system away from any singularity and thus improving the factorizer accuracy.A value of ERP=1e-10( double precision ) and 1e-5 ( single precision ) are recommended (0.0 is the default)");
+	RNA_def_property_update(prop, NC_SCENE, "rna_RigidBodyWorld_reset");
+
+	prop = RNA_def_property(srna, "lsr", PROP_FLOAT, PROP_NONE);
+	RNA_def_property_float_sdna(prop, NULL, "lsr");
+	RNA_def_property_ui_range(prop, 0.0f, 1.0f, 1, 3);
+	RNA_def_property_float_default(prop, 0.0f);
+	RNA_def_property_ui_text(prop, "LSR",
+		"leastSquaresResidual:A value of 1e-10( double precision ) and 1e-5 ( single precision ) are recommended (0.0 is the default)");
 	RNA_def_property_update(prop, NC_SCENE, "rna_RigidBodyWorld_reset");
 	
 	/* split impulse */

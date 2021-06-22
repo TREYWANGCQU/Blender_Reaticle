@@ -541,8 +541,7 @@ void	btDiscreteDynamicsWorld::internalSingleStepSimulation(btScalar timeStep)
 
 	getSolverInfo().m_timeStep = timeStep;
 	getSolverInfo().m_box_periodic = m_mx_periodic - m_mi_periodic;
-
-
+	
 	///solve contact and other joint constraints
 	solveConstraints(getSolverInfo());
 
@@ -1573,6 +1572,7 @@ void	btDiscreteDynamicsWorld::serializeDynamicsWorldInfo(btSerializer* serialize
 		worldInfo->m_solverInfo.m_solverMode = getSolverInfo().m_solverMode;
 		worldInfo->m_solverInfo.m_restingContactRestitutionThreshold = getSolverInfo().m_restingContactRestitutionThreshold;
 		worldInfo->m_solverInfo.m_minimumSolverBatchSize = getSolverInfo().m_minimumSolverBatchSize;
+		
 
 		worldInfo->m_solverInfo.m_splitImpulse = getSolverInfo().m_splitImpulse;
 

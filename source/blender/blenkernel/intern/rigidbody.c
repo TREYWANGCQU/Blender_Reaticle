@@ -934,6 +934,7 @@ void BKE_rigidbody_validate_sim_world(Scene *scene, RigidBodyWorld *rbw, bool re
 	
 
 	RB_dworld_set_solver_iterations(rbw->physics_world, rbw->num_solver_iterations);
+	RB_dworld_set_solver_parameters(rbw->physics_world, rbw->erp, rbw->cfm, rbw->lsr);
 	RB_dworld_set_split_impulse(rbw->physics_world, rbw->flag & RBW_FLAG_USE_SPLIT_IMPULSE);
 }
 
@@ -965,7 +966,8 @@ RigidBodyWorld *BKE_rigidbody_create_world(Scene *scene)
 
 	rbw->steps_per_second = 100; /* Bullet default (50 Hz) */
 	rbw->num_solver_iterations = 10; /* 10 is bullet default */
-
+	rbw->erp = 0.2; /* 0.2 is bullet default */
+	rbw->cfm = 0.0; /* 0.0 is bullet default */
 	rbw->pointcache = BKE_ptcache_add(&(rbw->ptcaches));
 	rbw->pointcache->step = 1;
 

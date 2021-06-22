@@ -55,18 +55,23 @@ typedef struct RigidBodyWorld {
 	
 	struct Group *constraints;	/* Group containing objects to use for Rigid Body Constraints*/
 
-	int pad;
-	float ltime;				/* last frame world was evaluated for (internal) */
+	//int pad;
+	
 	
 	/* cache */
 	struct PointCache *pointcache;
 	struct ListBase ptcaches;
 	int numbodies;              /* number of objects in rigid body group */
+	float ltime;				/* last frame world was evaluated for (internal) */
 	
-	short steps_per_second;		/* number of simulation steps thaken per second */
-	short num_solver_iterations;/* number of constraint solver iterations made per simulation step */
+	int steps_per_second;		/* number of simulation steps thaken per second */
+	int num_solver_iterations;/* number of constraint solver iterations made per simulation step */
 
-	
+	float erp;/* the error reduction parameter:The ERP specifies what proportion of the joint error will be fixed during the next simulation step. */
+	float cfm;/*Constraint Force Mixing: Using a positive value of CFM has the additional benefit of taking the system away from any singularity and thus improving the factorizer accuracy. */
+	float lsr;/*leastSquaresResidual*/
+	int pad;
+
 	float upper_periodic_x;
 	float lower_periodic_x;
 	float upper_periodic_y;
