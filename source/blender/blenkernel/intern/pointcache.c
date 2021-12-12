@@ -130,7 +130,7 @@ static int ptcache_data_size[] = {
 		3 * sizeof(float), // BPHYS_DATA_TIMES//BPHYS_DATA_FORCE
 		sizeof(BoidData), // case BPHYS_DATA_BOIDS
 		3 * sizeof(float), // BPHYS_DATA_TORQUE
-		26*sizeof(float) // BPHYS_DATA_CONTACT
+		35*sizeof(float) // BPHYS_DATA_CONTACT
 };
 
 static int ptcache_extra_datasize[] = {
@@ -1282,7 +1282,7 @@ static int  ptcache_rigidbody_write(int index, void *rb_v, void **data, int UNUS
 {
 	RigidBodyWorld *rbw = rb_v;
 	Object *ob = NULL;
-	float contacts_info[26];
+	float contacts_info[35];
 	
 	
 	if (rbw->objects)
@@ -1300,6 +1300,8 @@ static int  ptcache_rigidbody_write(int index, void *rb_v, void **data, int UNUS
 			RB_body_get_totalforce(rbo->physics_object, rbo->totalforce);
 			RB_body_get_totaltorque(rbo->physics_object, rbo->totaltorque);
 			RB_body_get_chris_stress(rbo->physics_object, rbo->chris_stress_x, rbo->chris_stress_y, rbo->chris_stress_z);
+			RB_body_get_fabric_tensor(rbo->physics_object, rbo->fabric_tensor_x, rbo->fabric_tensor_y, rbo->fabric_tensor_z);
+
 
 			rbo->num_contacts = RB_body_get_num_contacts(rbo->physics_object);
 			rbo->rigidbody_id = RB_body_get_rigidbodyId(rbo->physics_object);
@@ -1334,6 +1336,16 @@ static int  ptcache_rigidbody_write(int index, void *rb_v, void **data, int UNUS
 			contacts_info[24] = rbo->chris_stress_z[1];
 			contacts_info[25] = rbo->chris_stress_z[2];
 
+			contacts_info[26] = rbo->fabric_tensor_x[0];
+			contacts_info[27] = rbo->fabric_tensor_x[1];
+			contacts_info[28] = rbo->fabric_tensor_x[2];
+			contacts_info[29] = rbo->fabric_tensor_y[0];
+			contacts_info[30] = rbo->fabric_tensor_y[1];
+			contacts_info[31] = rbo->fabric_tensor_y[2];
+			contacts_info[32] = rbo->fabric_tensor_z[0];
+			contacts_info[33] = rbo->fabric_tensor_z[1];
+			contacts_info[34] = rbo->fabric_tensor_z[2];
+
 			
 
 			
@@ -1355,7 +1367,7 @@ static void ptcache_rigidbody_read(int index, void *rb_v, void **data, float UNU
 {
 	RigidBodyWorld *rbw = rb_v;
 	Object *ob = NULL;
-	float contacts_info[26];
+	float contacts_info[35];
 
 	if (rbw->objects)
 		ob = rbw->objects[index];
@@ -1405,6 +1417,16 @@ static void ptcache_rigidbody_read(int index, void *rb_v, void **data, float UNU
 				rbo->chris_stress_z[0] = contacts_info[23];
 				rbo->chris_stress_z[1] = contacts_info[24];
 				rbo->chris_stress_z[2] = contacts_info[25];
+
+				rbo->fabric_tensor_x[0] = contacts_info[26];
+				rbo->fabric_tensor_x[1] = contacts_info[27];
+				rbo->fabric_tensor_x[2] = contacts_info[28];
+				rbo->fabric_tensor_y[0] = contacts_info[29];
+				rbo->fabric_tensor_y[1] = contacts_info[30];
+				rbo->fabric_tensor_y[2] = contacts_info[31];
+				rbo->fabric_tensor_z[0] = contacts_info[32];
+				rbo->fabric_tensor_z[1] = contacts_info[33];
+				rbo->fabric_tensor_z[2] = contacts_info[34];
 
 			}
 		}

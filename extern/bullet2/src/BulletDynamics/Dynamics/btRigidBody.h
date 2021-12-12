@@ -116,6 +116,10 @@ class btRigidBody  : public btCollisionObject
 	btVector3 m_chris_stress_y;
 	btVector3 m_chris_stress_z;
 
+	btVector3 m_contact_tensor_x;
+	btVector3 m_contact_tensor_y;
+	btVector3 m_contact_tensor_z;
+
 	int				m_rigidbodyFlags;
 	
 	int				m_debugBodyId;
@@ -367,6 +371,27 @@ public:
 
 	};
 
+	const btVector3 getContactTensorX() const
+	{
+
+
+		return  m_contact_tensor_x;
+
+	};
+	const btVector3 getContactTensorY() const
+	{
+
+
+		return  m_contact_tensor_y;
+
+	};
+	const btVector3 getContactTensorZ() const
+	{
+
+
+		return  m_contact_tensor_z;
+
+	};
 
 
 
@@ -437,11 +462,15 @@ public:
 	}
 	void	setForceChains(btScalar force, int id, const btVector3& normal, const btVector3& vec_pos)
 	{
+	
+
 		m_chris_stress_x = m_chris_stress_x+force*normal.m_floats[0] * vec_pos;
 		m_chris_stress_y = m_chris_stress_y+force*normal.m_floats[1] * vec_pos;
 		m_chris_stress_z = m_chris_stress_z+force*normal.m_floats[2] * vec_pos;
 			
-
+		m_contact_tensor_x = vec_pos.m_floats[0] / vec_pos.length2() * vec_pos;
+		m_contact_tensor_y = vec_pos.m_floats[1] / vec_pos.length2() * vec_pos;
+		m_contact_tensor_z = vec_pos.m_floats[2] / vec_pos.length2() * vec_pos;
 
 		if (force>m_force_chainsForce.m_floats[2])
 		{
@@ -482,6 +511,9 @@ public:
 		m_chris_stress_x.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
 		m_chris_stress_y.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
 		m_chris_stress_z.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		m_contact_tensor_x.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		m_contact_tensor_y.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		m_contact_tensor_z.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
 
 	}
 

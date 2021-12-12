@@ -600,6 +600,16 @@ void RB_body_get_chris_stress(rbRigidBody *object, float v1[3], float v2[3], flo
 	copy_v3_btvec3(v3, body->getChrisStressZ());
 
 }
+void RB_body_get_fabric_tensor(rbRigidBody* object, float v1[3], float v2[3], float v3[3])
+{
+	btRigidBody* body = object->body;
+
+	copy_v3_btvec3(v1, body->getContactTensorX());
+	copy_v3_btvec3(v2, body->getContactTensorY());
+	copy_v3_btvec3(v3, body->getContactTensorZ());
+
+}
+
 
 void RB_body_get_ForcechainNormal(rbRigidBody *object, float v1[3], float v2[3], float v3[3])
 {

@@ -839,7 +839,7 @@ static void rna_def_rigidbody_world(BlenderRNA *brna)
 	RNA_def_property_ui_range(prop, 0.0f, 1.0f, 1, 3);
 	RNA_def_property_float_default(prop, 0.2f);
 	RNA_def_property_ui_text(prop, "ERP",
-		" error reduction parameter:The ERP specifies what proportion of the joint error will be fixed during the next simulation step. If ERP=0 then no correcting force is applied and the bodies will eventually drift apart as the simulation proceeds. If ERP=1 then the simulation will attempt to fix all joint error during the next time step. However, setting ERP=1 is not recommended, as the joint error will not be completely fixed due to various internal approximations. A value of ERP=0.1 to 0.8 is recommended (0.2 is the default).");
+		" error reduction parameter:The ERP specifies what proportion of the joint error will be fixed during the next simulation step. If ERP=0 then no correcting force is applied and the bodies will eventually drift apart as the simulation proceeds. If ERP=1 then the simulation will attempt to fix all joint error during the next time step. However, setting ERP=1 is not recommended, as the joint error will not be completely fixed due to various internal approximations. A value of ERP=0.1 to 0.8 is recommended (0.2 is the default)");
 	RNA_def_property_update(prop, NC_SCENE, "rna_RigidBodyWorld_reset");
 
 
@@ -1037,6 +1037,19 @@ static void rna_def_rigidbody_object(BlenderRNA *brna)
 	RNA_def_property_float_sdna(prop, NULL, "chris_stress_z");
 	RNA_def_property_ui_text(prop, "Chris_Stress_Z", "Christoffersen stress sigma_zi(i=x,y,z)");
 
+	
+	prop = RNA_def_property(srna, "fabric_tensor_x", PROP_FLOAT, PROP_NONE);
+	RNA_def_property_float_sdna(prop, NULL, "fabric_tensor_x");
+	RNA_def_property_ui_text(prop, "fabric_tensor_X", "Contact fabric tensor R_xi(i=x,y,z)");
+
+	prop = RNA_def_property(srna, "fabric_tensor_y", PROP_FLOAT, PROP_NONE);
+	RNA_def_property_float_sdna(prop, NULL, "fabric_tensor_y");
+	RNA_def_property_ui_text(prop, "fabric_tensor_Y", "Contact fabric tensor R_yi(i=x,y,z)");
+
+	prop = RNA_def_property(srna, "fabric_tensor_z", PROP_FLOAT, PROP_NONE);
+	RNA_def_property_float_sdna(prop, NULL, "fabric_tensor_z");
+	RNA_def_property_ui_text(prop, "fabric_tensor_Z", "Contact fabric tensor R_zi(i=x,y,z)");
+	
 
 
 
