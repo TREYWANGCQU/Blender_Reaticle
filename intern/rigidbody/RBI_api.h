@@ -194,11 +194,11 @@ void RB_body_get_totaltorque(rbRigidBody *body, float v_out[3]);
 void RB_body_get_chris_stress(rbRigidBody *body, float v1[3], float v2[3], float v3[3]);
 void RB_body_get_fabric_tensor(rbRigidBody* body, float v1[3], float v2[3], float v3[3]);
 
-void RB_body_get_ForcechainNormal(rbRigidBody *body, float v1[3], float v2[3], float v3[3]);
+void RB_body_get_ForcechainNormal(rbRigidBody *body, float v1[9], float v2[9], float v3[9]);
 float RB_body_get_num_contacts(rbRigidBody* body);
 float RB_body_get_rigidbodyId(rbRigidBody* body);
-void RB_body_get_ForcechainId(rbRigidBody* body, float v[3]);
-void RB_body_get_ForcechainForce(rbRigidBody* body,float v[3]);
+void RB_body_get_ForcechainId(rbRigidBody* body, float v[9]);
+void RB_body_get_ForcechainForce(rbRigidBody* body,float v[9]);
 
 
 /* Linear/Angular Factor, used to lock translation/roation axes */

@@ -128,6 +128,21 @@ static inline void copy_v3_btvec3(float vec[3], const btVector3 &btvec)
 	vec[1] = (double)btvec[1];
 	vec[2] = (double)btvec[2];
 }
+
+static inline void copy_v9_btmatrix3x3(float vec[9], const btMatrix3x3 &btvec)
+{
+	vec[0] = (double)btvec[0].m_floats[0];
+	vec[1] = (double)btvec[0].m_floats[1];
+	vec[2] = (double)btvec[0].m_floats[2];
+	vec[3] = (double)btvec[1].m_floats[0];
+	vec[4] = (double)btvec[1].m_floats[1];
+	vec[5] = (double)btvec[1].m_floats[2];
+	vec[6] = (double)btvec[2].m_floats[0];
+	vec[7] = (double)btvec[2].m_floats[1];
+	vec[8] = (double)btvec[2].m_floats[2];
+	
+}
+
 static inline void copy_quat_btquat(float quat[4], const btQuaternion &btquat)
 {
 	quat[0] = btquat.getW();
@@ -611,20 +626,20 @@ void RB_body_get_fabric_tensor(rbRigidBody* object, float v1[3], float v2[3], fl
 }
 
 
-void RB_body_get_ForcechainNormal(rbRigidBody *object, float v1[3], float v2[3], float v3[3])
+void RB_body_get_ForcechainNormal(rbRigidBody *object, float v1[9], float v2[9], float v3[9])
 {
 	btRigidBody *body = object->body;
 
-	copy_v3_btvec3(v1, body->getForcechainNormal1());
-	copy_v3_btvec3(v2, body->getForcechainNormal2());
-	copy_v3_btvec3(v3, body->getForcechainNormal3());
+	copy_v9_btmatrix3x3(v1, body->getForcechainNormal1());
+	copy_v9_btmatrix3x3(v2, body->getForcechainNormal2());
+	copy_v9_btmatrix3x3(v3, body->getForcechainNormal3());
 
 }
 
-void RB_body_get_ForcechainForce(rbRigidBody *object,float v[3])
+void RB_body_get_ForcechainForce(rbRigidBody *object,float v[9])
 {
 	btRigidBody* body = object->body;
-	copy_v3_btvec3(v, body->getForcechainForce());
+	copy_v9_btmatrix3x3(v, body->getForcechainForce());
 	
 }
 
@@ -641,10 +656,10 @@ float RB_body_get_rigidbodyId(rbRigidBody *object)
 
 	return (float)body->getrigidbodyId();
 }
-void  RB_body_get_ForcechainId(rbRigidBody *object, float v[3])
+void  RB_body_get_ForcechainId(rbRigidBody *object, float v[9])
 {
 	btRigidBody* body = object->body;
-	copy_v3_btvec3(v, body->getforcechainId());
+	copy_v9_btmatrix3x3(v, body->getforcechainId());
 	
 }
 

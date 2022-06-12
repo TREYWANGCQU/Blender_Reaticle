@@ -106,11 +106,11 @@ class btRigidBody  : public btCollisionObject
 	//keep track of typed constraints referencing this rigid body, to disable collision between linked bodies
 	btAlignedObjectArray<btTypedConstraint*> m_constraintRefs;
 
-	btVector3 m_force_chainsId;
-	btVector3 m_force_chainsForce;
-	btVector3 m_force_chainsNormal1;
-	btVector3 m_force_chainsNormal2;
-	btVector3 m_force_chainsNormal3;
+	btMatrix3x3 m_force_chainsId;
+	btMatrix3x3 m_force_chainsForce;
+	btMatrix3x3 m_force_chainsNormal1;
+	btMatrix3x3 m_force_chainsNormal2;
+	btMatrix3x3 m_force_chainsNormal3;
 
 	btVector3 m_chris_stress_x;
 	btVector3 m_chris_stress_y;
@@ -395,21 +395,21 @@ public:
 
 
 
-	const btVector3 getForcechainNormal1() const
+	const btMatrix3x3 getForcechainNormal1() const
 	{
 
 
 		return  m_force_chainsNormal1;
 
 	};
-	const btVector3 getForcechainNormal2() const
+	const btMatrix3x3 getForcechainNormal2() const
 	{
 
 
 		return  m_force_chainsNormal2;
 
 	};
-	const btVector3 getForcechainNormal3() const
+	const btMatrix3x3 getForcechainNormal3() const
 	{
 
 
@@ -427,12 +427,12 @@ public:
 		return m_rigidbodyId;
 	};
 
-	const btVector3 getforcechainId() const
+	const btMatrix3x3 getforcechainId() const
 	{
 		return m_force_chainsId;
 	};
 
-	const btVector3 getForcechainForce() const
+	const btMatrix3x3 getForcechainForce() const
 	{
 		return m_force_chainsForce;
 	};
@@ -472,24 +472,60 @@ public:
 		m_contact_tensor_y = vec_pos.m_floats[1] / vec_pos.length2() * vec_pos;
 		m_contact_tensor_z = vec_pos.m_floats[2] / vec_pos.length2() * vec_pos;
 
-		if (force>m_force_chainsForce.m_floats[2])
+		if (force>m_force_chainsForce[2].m_floats[2])
 		{
 			
-			m_force_chainsForce.m_floats[2] = force;
-			m_force_chainsNormal3 = normal;
-			m_force_chainsId.m_floats[2] = id;
+			m_force_chainsForce[2].m_floats[2] = force;
+			m_force_chainsNormal3[2] = normal;
+			m_force_chainsId[2].m_floats[2] = id;
 
-			if (m_force_chainsForce.m_floats[2] > m_force_chainsForce.m_floats[1])
+			if (m_force_chainsForce[2].m_floats[2] > m_force_chainsForce[2].m_floats[1])
 			{
-				btSwap(m_force_chainsForce.m_floats[2], m_force_chainsForce.m_floats[1]);
-				btSwap(m_force_chainsNormal3, m_force_chainsNormal2);
-				btSwap(m_force_chainsId.m_floats[2], m_force_chainsId.m_floats[1]);
+				btSwap(m_force_chainsForce[2].m_floats[2], m_force_chainsForce[2].m_floats[1]);
+				btSwap(m_force_chainsNormal3[2], m_force_chainsNormal3[1]);
+				btSwap(m_force_chainsId[2].m_floats[2], m_force_chainsId[2].m_floats[1]);
 			}
-			if (m_force_chainsForce.m_floats[1] > m_force_chainsForce.m_floats[0])
+			if (m_force_chainsForce[2].m_floats[1] > m_force_chainsForce[2].m_floats[0])
 			{
-				btSwap(m_force_chainsForce.m_floats[1], m_force_chainsForce.m_floats[0]);
-				btSwap(m_force_chainsNormal1, m_force_chainsNormal2);
-				btSwap(m_force_chainsId.m_floats[1], m_force_chainsId.m_floats[0]);
+				btSwap(m_force_chainsForce[2].m_floats[1], m_force_chainsForce[2].m_floats[0]);
+				btSwap(m_force_chainsNormal3[1], m_force_chainsNormal3[0]);
+				btSwap(m_force_chainsId[2].m_floats[1], m_force_chainsId[2].m_floats[0]);
+			}
+			if (m_force_chainsForce[2].m_floats[0] > m_force_chainsForce[1].m_floats[2])
+			{
+				btSwap(m_force_chainsForce[2].m_floats[0], m_force_chainsForce[1].m_floats[2]);
+				btSwap(m_force_chainsNormal3[0], m_force_chainsNormal2[2]);
+				btSwap(m_force_chainsId[2].m_floats[0], m_force_chainsId[1].m_floats[2]);
+			}
+			if (m_force_chainsForce[1].m_floats[2] > m_force_chainsForce[1].m_floats[1])
+			{
+				btSwap(m_force_chainsForce[1].m_floats[2], m_force_chainsForce[1].m_floats[1]);
+				btSwap(m_force_chainsNormal2[2], m_force_chainsNormal2[1]);
+				btSwap(m_force_chainsId[1].m_floats[2], m_force_chainsId[1].m_floats[1]);
+			}
+			if (m_force_chainsForce[1].m_floats[1] > m_force_chainsForce[1].m_floats[0])
+			{
+				btSwap(m_force_chainsForce[1].m_floats[1], m_force_chainsForce[1].m_floats[0]);
+				btSwap(m_force_chainsNormal2[1], m_force_chainsNormal2[0]);
+				btSwap(m_force_chainsId[1].m_floats[1], m_force_chainsId[1].m_floats[0]);
+			}
+			if (m_force_chainsForce[1].m_floats[0] > m_force_chainsForce[0].m_floats[2])
+			{
+				btSwap(m_force_chainsForce[1].m_floats[0], m_force_chainsForce[0].m_floats[2]);
+				btSwap(m_force_chainsNormal2[0], m_force_chainsNormal1[2]);
+				btSwap(m_force_chainsId[1].m_floats[0], m_force_chainsId[0].m_floats[2]);
+			}
+			if (m_force_chainsForce[0].m_floats[2] > m_force_chainsForce[0].m_floats[1])
+			{
+				btSwap(m_force_chainsForce[0].m_floats[2], m_force_chainsForce[0].m_floats[1]);
+				btSwap(m_force_chainsNormal1[2], m_force_chainsNormal1[1]);
+				btSwap(m_force_chainsId[0].m_floats[2], m_force_chainsId[0].m_floats[1]);
+			}
+			if (m_force_chainsForce[0].m_floats[1] > m_force_chainsForce[0].m_floats[0])
+			{
+				btSwap(m_force_chainsForce[0].m_floats[1], m_force_chainsForce[0].m_floats[0]);
+				btSwap(m_force_chainsNormal1[1], m_force_chainsNormal1[0]);
+				btSwap(m_force_chainsId[0].m_floats[1], m_force_chainsId[0].m_floats[0]);
 			}
 
 
@@ -501,13 +537,12 @@ public:
 
 	void	clearForceChains()
 	{
-		m_force_chainsId.m_floats[0] = -1;
-		m_force_chainsId.m_floats[1] = -1;
-		m_force_chainsId.m_floats[2] = -1;
-		m_force_chainsForce.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
-		m_force_chainsNormal1.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
-		m_force_chainsNormal2.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
-		m_force_chainsNormal3.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		
+		m_force_chainsId.setValue(-1,-1,-1,-1,-1,-1,-1,-1,-1); 
+		m_force_chainsForce.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0),btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		m_force_chainsNormal1.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		m_force_chainsNormal2.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0));
+		m_force_chainsNormal3.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0), btScalar(0.0));
 		m_chris_stress_x.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
 		m_chris_stress_y.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));
 		m_chris_stress_z.setValue(btScalar(0.0), btScalar(0.0), btScalar(0.0));

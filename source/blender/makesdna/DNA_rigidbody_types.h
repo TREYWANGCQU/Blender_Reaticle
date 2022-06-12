@@ -152,11 +152,11 @@ typedef struct RigidBodyOb {
 	float fabric_tensor_x[3];
 	float fabric_tensor_y[3];
 	float fabric_tensor_z[3];
-	float forcechain_id[3];
-	float forcechain_force[3];
-	float forcechain_normal1[3];
-	float forcechain_normal2[3];
-	float forcechain_normal3[3];/* 名字不能有大写，变量数目为偶，8字节对齐，char占1字节，short占 2 字节，int 、float、long(64位win是8字节) 都占 4 字节，double 占8 字节，任意类型的指针都占4个字节 */
+	float forcechain_id[9];
+	float forcechain_force[9];
+	float forcechain_normal1[9];
+	float forcechain_normal2[9];
+	float forcechain_normal3[9];/* 名字不能有大写，变量数目为偶，8字节对齐，char占1字节，short占 2 字节，int 、float、long(64位win是8字节) 都占 4 字节，double 占8 字节，任意类型的指针都占4个字节 */
 
 	
 	

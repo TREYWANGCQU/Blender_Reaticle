@@ -130,7 +130,7 @@ static int ptcache_data_size[] = {
 		3 * sizeof(float), // BPHYS_DATA_TIMES//BPHYS_DATA_FORCE
 		sizeof(BoidData), // case BPHYS_DATA_BOIDS
 		3 * sizeof(float), // BPHYS_DATA_TORQUE
-		35*sizeof(float) // BPHYS_DATA_CONTACT
+		65*sizeof(float) // BPHYS_DATA_CONTACT
 };
 
 static int ptcache_extra_datasize[] = {
@@ -1282,8 +1282,8 @@ static int  ptcache_rigidbody_write(int index, void *rb_v, void **data, int UNUS
 {
 	RigidBodyWorld *rbw = rb_v;
 	Object *ob = NULL;
-	float contacts_info[35];
-	
+	float contacts_info[65];
+	int i;
 	
 	if (rbw->objects)
 		ob = rbw->objects[index];
@@ -1309,42 +1309,49 @@ static int  ptcache_rigidbody_write(int index, void *rb_v, void **data, int UNUS
 			RB_body_get_ForcechainForce(rbo->physics_object, rbo->forcechain_force);
 			RB_body_get_ForcechainNormal(rbo->physics_object, rbo->forcechain_normal1, rbo->forcechain_normal2, rbo->forcechain_normal3);
 			contacts_info[0] = rbo->num_contacts;
-			contacts_info[1] = rbo->forcechain_force[0];
-			contacts_info[2] = rbo->forcechain_force[1];
-			contacts_info[3] = rbo->forcechain_force[2];
-			contacts_info[4] = rbo->forcechain_normal1[0];
-			contacts_info[5] = rbo->forcechain_normal1[1];
-			contacts_info[6] = rbo->forcechain_normal1[2];
-			contacts_info[7] = rbo->forcechain_normal2[0];
-			contacts_info[8] = rbo->forcechain_normal2[1];
-			contacts_info[9] = rbo->forcechain_normal2[2];
-			contacts_info[10] = rbo->forcechain_normal3[0];
-			contacts_info[11] = rbo->forcechain_normal3[1];
-			contacts_info[12] = rbo->forcechain_normal3[2];
-			contacts_info[13] = rbo->rigidbody_id;
-			contacts_info[14] = rbo->forcechain_id[0];
-			contacts_info[15] = rbo->forcechain_id[1];
-			contacts_info[16] = rbo->forcechain_id[2];
+			for (i = 0; i<9; i++)
+			{
+				contacts_info[i + 1] = rbo->forcechain_force[i];
+			};
+			for (i = 0; i<9; i++)
+			{
+				contacts_info[i + 10] = rbo->forcechain_normal1[i];
+			};
+			for (i = 0; i<9; i++)
+			{
+				contacts_info[i + 19] = rbo->forcechain_normal2[i];
+			};
+			for (i = 0; i<9; i++)
+			{
+				contacts_info[i + 28] = rbo->forcechain_normal3[i];
+			};
+			
+			contacts_info[37] = rbo->rigidbody_id;
+			for (i = 0; i<9; i++)
+			{
+				contacts_info[i + 38] = rbo->forcechain_id[i];
+			};
+			
 
-			contacts_info[17] = rbo->chris_stress_x[0];
-			contacts_info[18] = rbo->chris_stress_x[1];
-			contacts_info[19] = rbo->chris_stress_x[2];
-			contacts_info[20] = rbo->chris_stress_y[0];
-			contacts_info[21] = rbo->chris_stress_y[1];
-			contacts_info[22] = rbo->chris_stress_y[2];
-			contacts_info[23] = rbo->chris_stress_z[0];
-			contacts_info[24] = rbo->chris_stress_z[1];
-			contacts_info[25] = rbo->chris_stress_z[2];
+			contacts_info[47] = rbo->chris_stress_x[0];
+			contacts_info[48] = rbo->chris_stress_x[1];
+			contacts_info[49] = rbo->chris_stress_x[2];
+			contacts_info[50] = rbo->chris_stress_y[0];
+			contacts_info[51] = rbo->chris_stress_y[1];
+			contacts_info[52] = rbo->chris_stress_y[2];
+			contacts_info[53] = rbo->chris_stress_z[0];
+			contacts_info[54] = rbo->chris_stress_z[1];
+			contacts_info[55] = rbo->chris_stress_z[2];
 
-			contacts_info[26] = rbo->fabric_tensor_x[0];
-			contacts_info[27] = rbo->fabric_tensor_x[1];
-			contacts_info[28] = rbo->fabric_tensor_x[2];
-			contacts_info[29] = rbo->fabric_tensor_y[0];
-			contacts_info[30] = rbo->fabric_tensor_y[1];
-			contacts_info[31] = rbo->fabric_tensor_y[2];
-			contacts_info[32] = rbo->fabric_tensor_z[0];
-			contacts_info[33] = rbo->fabric_tensor_z[1];
-			contacts_info[34] = rbo->fabric_tensor_z[2];
+			contacts_info[56] = rbo->fabric_tensor_x[0];
+			contacts_info[57] = rbo->fabric_tensor_x[1];
+			contacts_info[58] = rbo->fabric_tensor_x[2];
+			contacts_info[59] = rbo->fabric_tensor_y[0];
+			contacts_info[60] = rbo->fabric_tensor_y[1];
+			contacts_info[61] = rbo->fabric_tensor_y[2];
+			contacts_info[62] = rbo->fabric_tensor_z[0];
+			contacts_info[63] = rbo->fabric_tensor_z[1];
+			contacts_info[64] = rbo->fabric_tensor_z[2];
 
 			
 
@@ -1367,7 +1374,8 @@ static void ptcache_rigidbody_read(int index, void *rb_v, void **data, float UNU
 {
 	RigidBodyWorld *rbw = rb_v;
 	Object *ob = NULL;
-	float contacts_info[35];
+	float contacts_info[65];
+	int i;
 
 	if (rbw->objects)
 		ob = rbw->objects[index];
@@ -1391,42 +1399,49 @@ static void ptcache_rigidbody_read(int index, void *rb_v, void **data, float UNU
 				PTCACHE_DATA_TO(data, BPHYS_DATA_TORQUE, 0, rbo->totaltorque);
 				PTCACHE_DATA_TO(data, BPHYS_DATA_CONTACT, 0, contacts_info);
 				rbo->num_contacts = contacts_info[0];
-				rbo->forcechain_force[0] =contacts_info[1];
-				rbo->forcechain_force[1] = contacts_info[2];
-				rbo->forcechain_force[2] = contacts_info[3];
-				rbo->forcechain_normal1[0] = contacts_info[4];
-				rbo->forcechain_normal1[1] = contacts_info[5];
-				rbo->forcechain_normal1[2] = contacts_info[6];
-				rbo->forcechain_normal2[0] = contacts_info[7];
-				rbo->forcechain_normal2[1] = contacts_info[8];
-				rbo->forcechain_normal2[2] = contacts_info[9];
-				rbo->forcechain_normal3[0] = contacts_info[10];
-				rbo->forcechain_normal3[1] = contacts_info[11];
-				rbo->forcechain_normal3[2] = contacts_info[12];
-				rbo->rigidbody_id = contacts_info[13];
-				rbo->forcechain_id[0] = contacts_info[14];
-				rbo->forcechain_id[1] = contacts_info[15];
-				rbo->forcechain_id[2] = contacts_info[16];
+				for (i = 0; i<9; i++)
+				{
+					rbo->forcechain_force[i] = contacts_info[i + 1];
+				};
+				for (i = 0; i<9; i++)
+				{
+					rbo->forcechain_normal1[i] = contacts_info[i + 10];
+				};
+				for (i = 0; i<9; i++)
+				{
+					rbo->forcechain_normal2[i] = contacts_info[i + 19];
+				};
+				for (i = 0; i<9; i++)
+				{
+					rbo->forcechain_normal3[i] = contacts_info[i + 28];
+				};
+				
+				rbo->rigidbody_id = contacts_info[37];
+				for (i = 0; i<9; i++)
+				{
+					rbo->forcechain_id[i] = contacts_info[i + 38];
+				};
+				
 
-				rbo->chris_stress_x[0] = contacts_info[17];
-				rbo->chris_stress_x[1] = contacts_info[18];
-				rbo->chris_stress_x[2] = contacts_info[19];
-				rbo->chris_stress_y[0] = contacts_info[20];
-				rbo->chris_stress_y[1] = contacts_info[21];
-				rbo->chris_stress_y[2] = contacts_info[22];
-				rbo->chris_stress_z[0] = contacts_info[23];
-				rbo->chris_stress_z[1] = contacts_info[24];
-				rbo->chris_stress_z[2] = contacts_info[25];
+				rbo->chris_stress_x[0] = contacts_info[47];
+				rbo->chris_stress_x[1] = contacts_info[48];
+				rbo->chris_stress_x[2] = contacts_info[49];
+				rbo->chris_stress_y[0] = contacts_info[50];
+				rbo->chris_stress_y[1] = contacts_info[51];
+				rbo->chris_stress_y[2] = contacts_info[52];
+				rbo->chris_stress_z[0] = contacts_info[53];
+				rbo->chris_stress_z[1] = contacts_info[54];
+				rbo->chris_stress_z[2] = contacts_info[55];
 
-				rbo->fabric_tensor_x[0] = contacts_info[26];
-				rbo->fabric_tensor_x[1] = contacts_info[27];
-				rbo->fabric_tensor_x[2] = contacts_info[28];
-				rbo->fabric_tensor_y[0] = contacts_info[29];
-				rbo->fabric_tensor_y[1] = contacts_info[30];
-				rbo->fabric_tensor_y[2] = contacts_info[31];
-				rbo->fabric_tensor_z[0] = contacts_info[32];
-				rbo->fabric_tensor_z[1] = contacts_info[33];
-				rbo->fabric_tensor_z[2] = contacts_info[34];
+				rbo->fabric_tensor_x[0] = contacts_info[56];
+				rbo->fabric_tensor_x[1] = contacts_info[57];
+				rbo->fabric_tensor_x[2] = contacts_info[58];
+				rbo->fabric_tensor_y[0] = contacts_info[59];
+				rbo->fabric_tensor_y[1] = contacts_info[60];
+				rbo->fabric_tensor_y[2] = contacts_info[61];
+				rbo->fabric_tensor_z[0] = contacts_info[62];
+				rbo->fabric_tensor_z[1] = contacts_info[63];
+				rbo->fabric_tensor_z[2] = contacts_info[64];
 
 			}
 		}
