@@ -468,9 +468,9 @@ public:
 		m_chris_stress_y = m_chris_stress_y+force*normal.m_floats[1] * vec_pos;
 		m_chris_stress_z = m_chris_stress_z+force*normal.m_floats[2] * vec_pos;
 			
-		m_contact_tensor_x = vec_pos.m_floats[0] / vec_pos.length2() * vec_pos;
-		m_contact_tensor_y = vec_pos.m_floats[1] / vec_pos.length2() * vec_pos;
-		m_contact_tensor_z = vec_pos.m_floats[2] / vec_pos.length2() * vec_pos;
+		m_contact_tensor_x = m_contact_tensor_x+ normal.m_floats[0]  * normal;
+		m_contact_tensor_y = m_contact_tensor_y+ normal.m_floats[1] * normal;
+		m_contact_tensor_z = m_contact_tensor_z+ normal.m_floats[2]  * normal;
 
 		if (force>m_force_chainsForce[2].m_floats[2])
 		{
